@@ -1,0 +1,23 @@
+#!/bin/bash
+# script name: testInOut
+# description: script runs c file and compares its output file with given output files
+# input: c file, input file, new output file name, out file
+# output: log files
+
+#cheking for # of parameters
+if (( $# != 4 )); then
+	echo "need 4 parametes"
+	exit 1
+fi
+
+#running c file
+"$2" < "$3" > "$1"
+
+#comparing output files
+if diff "$1" "$4" > /dev/null; then
+	echo Out files match
+  exit 0
+else
+	echo Out files mismatch
+  exit 1
+fi

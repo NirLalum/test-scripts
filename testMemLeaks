@@ -1,0 +1,29 @@
+#!/bin/bash
+# script name: testMemLeaks
+# description: script runs valgrind on given c file
+# input: c file, input file, new output file name, out file
+#output: log file
+
+#cheking for # of parameters
+if (( $# != 3 )); then
+	echo "need 3 parameters"
+	exit 1
+fi
+
+#running valgrind
+valgrind --tool=memcheck ./"$2" < "$3" > /dev/null 2> $1
+
+#cheking for differances 
+read line < "$1"
+while read line; do 
+	line_split=($line)
+	if [[ ${line_split[1]} == "ERROR" ]]; then
+		if [[ ${line_split[3]} == "0" ]]; then
+			echo "Memory test passed"
+			exit 0
+		else
+			echo "Memory test failed"
+			exit 1
+		fi
+	fi
+done < "$1"		
